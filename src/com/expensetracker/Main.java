@@ -1,23 +1,27 @@
 package com.expensetracker;
 
-import com.expensetracker.db.DBConnection;
-
-import java.sql.Connection;
+import com.expensetracker.dao.CategoryDAO;
+import com.expensetracker.model.Category;
 
 public class Main {
 
-    public static void main(String[] args) throws ClassNotFoundException {
+    public static void main(String[] args) {
 
-        Class.forName("com.mysql.cj.jdbc.Driver");
+        CategoryDAO categoryDAO = new CategoryDAO();
 
-        try (Connection connection = DBConnection.getConnection()) {
+        Category category = new Category(
+                0,
+                1,
+                "Food",
+                "EXPENSE"
+        );
 
-            System.out.println("Connected to MySQL successfully!");
+        boolean success = categoryDAO.addCategory(category);
 
-        } catch (Exception e) {
-            System.out.println("Connection failed!");
-            e.printStackTrace();
+        if (success) {
+            System.out.println("Category added successfully!");
+        } else {
+            System.out.println("Failed to add category.");
         }
-
     }
 }
