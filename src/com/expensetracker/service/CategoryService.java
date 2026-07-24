@@ -13,6 +13,10 @@ public class CategoryService {
         return categoryDAO.addCategory(category);
     }
 
+    public boolean deleteCategory(int categoryId) {
+        return categoryDAO.deleteCategory(categoryId);
+    }
+
     public List<Category> getAllCategories(int userId) {
         return categoryDAO.getAllCategories(userId);
     }

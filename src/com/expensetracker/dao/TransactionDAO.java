@@ -67,6 +67,28 @@ public class TransactionDAO {
         }
     }
 
+    public boolean deleteTransaction(int transactionId) {
+
+        String sql = """
+            DELETE FROM transactions
+            WHERE transaction_id = ?
+            """;
+
+        try (
+                Connection connection = DBConnection.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+
+            ps.setInt(1, transactionId);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public List<Transaction> getAllTransactions(int userId) {
 
         List<Transaction> transactions = new ArrayList<>();

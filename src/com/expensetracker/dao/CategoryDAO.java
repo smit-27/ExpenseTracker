@@ -38,6 +38,28 @@ public class CategoryDAO {
         }
     }
 
+    public boolean deleteCategory(int categoryId) {
+
+        String sql = """
+            DELETE FROM categories
+            WHERE category_id = ?
+            """;
+
+        try (
+                Connection connection = DBConnection.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+
+            ps.setInt(1, categoryId);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public List<Category> getAllCategories(int userId) {
 
         List<Category> categories = new ArrayList<>();

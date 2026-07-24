@@ -24,9 +24,12 @@ public class Main {
             System.out.println("\n===== Expense Tracker =====");
             System.out.println("1. Add Category");
             System.out.println("2. View Categories");
-            System.out.println("3. Add Transactions");
-            System.out.println("4. View Transactions");
-            System.out.println("5. Exit");
+            System.out.println("3. Delete Category");
+            System.out.println("4. Add Transactions");
+            System.out.println("5. View Transactions");
+            System.out.println("6. Update Transaction");
+            System.out.println("7. Delete Transaction");
+            System.out.println("8. Exit");
 
             System.out.print("Enter choice: ");
             int choice = scanner.nextInt();
@@ -38,11 +41,17 @@ public class Main {
 
                 case 2 -> viewCategories();
 
-                case 3 -> addTransaction();
+                case 3 -> deleteCategory();
 
-                case 4 -> viewTransactions();
+                case 4 -> addTransaction();
 
-                case 5 -> {
+                case 5 -> viewTransactions();
+
+                case 6 -> updateTransaction();
+
+                case 7 -> deleteTransaction();
+
+                case 8 -> {
                     System.out.println("Goodbye!");
                     return;
                 }
@@ -88,6 +97,20 @@ public class Main {
         categories.forEach(System.out::println);
     }
 
+    private static void deleteCategory() {
+
+        viewCategories();
+
+        System.out.print("\nEnter Category ID to delete: ");
+        int categoryId = scanner.nextInt();
+        scanner.nextLine();
+
+        if (categoryService.deleteCategory(categoryId))
+            System.out.println("Category deleted successfully!");
+        else
+            System.out.println("Category not found.");
+    }
+
     private static void addTransaction() {
 
         List<Category> categories = categoryService.getAllCategories(1);
@@ -129,6 +152,63 @@ public class Main {
             System.out.println("Transaction added.");
         else
             System.out.println("Failed.");
+    }
+
+    private static void updateTransaction() {
+
+        viewTransactions();
+
+        System.out.print("\nEnter Transaction ID: ");
+        int transactionId = scanner.nextInt();
+
+        List<Category> categories = categoryService.getAllCategories(1);
+
+        System.out.println("\nAvailable Categories");
+
+        for (Category category : categories) {
+            System.out.printf("%d. %s (%s)%n",
+                    category.getCategoryId(),
+                    category.getName(),
+                    category.getType());
+        }
+
+        System.out.print("\nEnter New Category ID: ");
+        int categoryId = scanner.nextInt();
+
+        System.out.print("Enter New Amount: ");
+        double amount = scanner.nextDouble();
+        scanner.nextLine();
+
+        System.out.print("Enter New Description: ");
+        String description = scanner.nextLine();
+
+        Transaction transaction = new Transaction(
+                transactionId,
+                1,
+                categoryId,
+                amount,
+                description,
+                LocalDate.now()
+        );
+
+        if(transactionService.updateTransaction(transaction))
+            System.out.println("Transaction Updated Successfully!");
+        else
+            System.out.println("Transaction Not Found.");
+    }
+
+    private static void deleteTransaction() {
+
+        viewTransactions();
+
+        System.out.print("\nEnter Transaction ID to delete: ");
+        int transactionId = scanner.nextInt();
+        scanner.nextLine();
+
+        if (transactionService.deleteTransaction(transactionId))
+            System.out.println("Transaction deleted successfully!");
+        else
+            System.out.println("Transaction not found.");
     }
 
     private static void viewTransactions() {

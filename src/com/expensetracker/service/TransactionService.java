@@ -18,6 +18,10 @@ public class TransactionService {
         return transactionDAO.updateTransaction(transaction);
     }
 
+    public boolean deleteTransaction(int transactionId) {
+        return transactionDAO.deleteTransaction(transactionId);
+    }
+
     public List<Transaction> getAllTransactions(int userId) {
         return transactionDAO.getAllTransactions(userId);
     }
