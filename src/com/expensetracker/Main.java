@@ -1,10 +1,7 @@
 package com.expensetracker;
 
-import com.expensetracker.model.Category;
-import com.expensetracker.model.Transaction;
-import com.expensetracker.model.TransactionView;
-import com.expensetracker.service.CategoryService;
-import com.expensetracker.service.TransactionService;
+import com.expensetracker.model.*;
+import com.expensetracker.service.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,6 +13,9 @@ public class Main {
     private static final CategoryService categoryService = new CategoryService();
     private static final TransactionService transactionService =
             new TransactionService();
+    private static DashboardService dashboardService = new DashboardService();
+    private static BudgetService budgetService = new BudgetService();
+    private static MonthlyReportService monthlyReportService = new MonthlyReportService();
 
     public static void main(String[] args) {
 
@@ -29,7 +29,12 @@ public class Main {
             System.out.println("5. View Transactions");
             System.out.println("6. Update Transaction");
             System.out.println("7. Delete Transaction");
-            System.out.println("8. Exit");
+            System.out.println("8. View Dashboard");
+            System.out.println("9. Add Budget");
+            System.out.println("10. View Budgets");
+            System.out.println("11. View Budget Report");
+            System.out.println("12. View Monthly Report");
+            System.out.println("13. Exit");
 
             System.out.print("Enter choice: ");
             int choice = scanner.nextInt();
@@ -51,7 +56,17 @@ public class Main {
 
                 case 7 -> deleteTransaction();
 
-                case 8 -> {
+                case 8 -> viewDashboard();
+
+                case 9 -> addBudget();
+
+                case 10 -> viewBudgets();
+
+                case 11 -> viewBudgetReport();
+
+                case 12 -> viewMonthlyReport();
+
+                case 13 -> {
                     System.out.println("Goodbye!");
                     return;
                 }
@@ -222,5 +237,77 @@ public class Main {
         }
 
         transactions.forEach(System.out::println);
+    }
+
+    private static void viewDashboard() {
+
+        Dashboard dashboard = dashboardService.getDashboard(1);
+
+        System.out.println();
+        System.out.println(dashboard);
+    }
+
+    private static void addBudget() {
+
+        viewCategories();
+
+        System.out.print("\nEnter Category ID: ");
+        int categoryId = scanner.nextInt();
+
+        System.out.print("Budget Amount: ");
+        double amount = scanner.nextDouble();
+        scanner.nextLine();
+
+        System.out.print("Budget Month (YYYY-MM-DD): ");
+        LocalDate month = LocalDate.parse(scanner.nextLine());
+
+        Budget budget = new Budget(
+                0,
+                1,
+                categoryId,
+                amount,
+                month
+        );
+
+        if (budgetService.addBudget(budget))
+            System.out.println("Budget added successfully!");
+        else
+            System.out.println("Failed to add budget.");
+    }
+
+    private static void viewBudgets() {
+
+        List<Budget> budgets = budgetService.getAllBudgets(1);
+
+        if (budgets.isEmpty()) {
+            System.out.println("No budgets found.");
+            return;
+        }
+
+        budgets.forEach(System.out::println);
+    }
+
+    private static void viewBudgetReport() {
+
+        List<BudgetView> report = budgetService.getBudgetReport(1);
+
+        if (report.isEmpty()) {
+            System.out.println("No budgets found.");
+            return;
+        }
+
+        report.forEach(System.out::println);
+    }
+
+    private static void viewMonthlyReport() {
+
+        System.out.print("Enter Month (YYYY-MM-DD): ");
+        LocalDate month = LocalDate.parse(scanner.nextLine());
+
+        MonthlyReport report =
+                monthlyReportService.getMonthlyReport(1, month);
+
+        System.out.println();
+        System.out.println(report);
     }
 }

@@ -57,3 +57,27 @@ CREATE TABLE IF NOT EXISTS transactions (
     ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS budgets (
+
+    budget_id INT AUTO_INCREMENT PRIMARY KEY,
+
+    user_id INT NOT NULL,
+
+    category_id INT NOT NULL,
+
+    budget_amount DECIMAL(10,2) NOT NULL,
+
+    budget_month DATE NOT NULL,
+
+    FOREIGN KEY (user_id)
+    REFERENCES users(user_id)
+    ON DELETE CASCADE,
+
+    FOREIGN KEY (category_id)
+    REFERENCES categories(category_id)
+    ON DELETE CASCADE,
+
+    UNIQUE(user_id, category_id, budget_month)
+
+);
+
