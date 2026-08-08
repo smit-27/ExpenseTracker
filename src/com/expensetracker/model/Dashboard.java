@@ -24,15 +24,33 @@ public class Dashboard {
         return balance;
     }
 
+    public double getSavingsRate() {
+
+        if (Double.compare(totalIncome, 0.0) == 0) {
+            return 0;
+        }
+
+        return (balance / totalIncome) * 100;
+    }
+
     @Override
     public String toString() {
         return """
-                ============================
-                Dashboard
-                ============================
-                Total Income : ₹%.2f
-                Total Expense: ₹%.2f
-                Balance      : ₹%.2f
-                """.formatted(totalIncome, totalExpense, balance);
+            ================================
+                    DASHBOARD
+            ================================
+
+            Total Income  : %.2f
+            Total Expense : %.2f
+            Balance       : %.2f
+            Savings Rate  : %.2f%%
+
+            ================================
+            """.formatted(
+                totalIncome,
+                totalExpense,
+                balance,
+                getSavingsRate()
+        );
     }
 }

@@ -75,13 +75,22 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return "Transaction{" +
-                "transactionId=" + transactionId +
-                ", userId=" + userId +
-                ", categoryId=" + categoryId +
-                ", amount=" + amount +
-                ", description='" + description + '\'' +
-                ", transactionDate=" + transactionDate +
-                '}';
+        return """
+            ==================================
+            Transaction ID : %d
+            User ID        : %d
+            Category ID    : %d
+            Amount         : %.2f
+            Description    : %s
+            Date           : %s
+            ==================================
+            """.formatted(
+                transactionId,
+                userId,
+                categoryId,
+                amount,
+                description,
+                transactionDate
+        );
     }
 }

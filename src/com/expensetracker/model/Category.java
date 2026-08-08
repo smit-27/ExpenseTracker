@@ -1,7 +1,5 @@
 package com.expensetracker.model;
 
-import java.util.StringJoiner;
-
 public class Category {
     private int categoryId;
     private int userId;
@@ -49,11 +47,18 @@ public class Category {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", Category.class.getSimpleName() + "[", "]")
-                .add("categoryId=" + categoryId)
-                .add("userId=" + userId)
-                .add("name='" + name + "'")
-                .add("type='" + type + "'")
-                .toString();
+        return """
+            ==================================
+            Category ID : %d
+            User ID     : %d
+            Name        : %s
+            Type        : %s
+            ==================================
+            """.formatted(
+                categoryId,
+                userId,
+                name,
+                type
+        );
     }
 }

@@ -38,14 +38,17 @@ public class MonthlyReport {
     @Override
     public String toString() {
         return """
-                =============================
-                Monthly Report
-                =============================
-                Month         : %s
-                Total Income  : £%.2f
-                Total Expense : £%.2f
-                Savings       : £%.2f
-                """.formatted(
+            ================================
+                 MONTHLY REPORT
+            ================================
+
+            Month         : %s
+            Total Income  : %.2f
+            Total Expense : %.2f
+            Savings       : %.2f
+
+            ================================
+            """.formatted(
                 month,
                 totalIncome,
                 totalExpense,

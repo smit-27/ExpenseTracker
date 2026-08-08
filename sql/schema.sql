@@ -78,6 +78,84 @@ CREATE TABLE IF NOT EXISTS budgets (
     ON DELETE CASCADE,
 
     UNIQUE(user_id, category_id, budget_month)
-
 );
+
+CREATE TABLE IF NOT EXISTS transaction_logs (
+    log_id INT PRIMARY KEY AUTO_INCREMENT,
+    transaction_id INT,
+    action_type ENUM('INSERT', 'UPDATE', 'DELETE') NOT NULL,
+    old_amount DECIMAL(10,2),
+    new_amount DECIMAL(10,2),
+    log_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- INSERT Trigger
+DELIMITER $$
+
+DROP TRIGGER IF EXISTS after_transaction_insert$$
+
+CREATE TRIGGER after_transaction_insert
+AFTER INSERT
+ON transactions
+FOR EACH ROW
+BEGIN
+INSERT INTO transaction_logs(
+    transaction_id,
+    action_type,
+    old_amount,
+    new_amount
+)
+VALUES(
+    NEW.transaction_id,
+    'INSERT',
+    NULL,
+    NEW.amount
+);
+END$$
+
+-- UPDATE Trigger
+DROP TRIGGER IF EXISTS after_transaction_update$$
+
+CREATE TRIGGER after_transaction_update
+AFTER UPDATE
+ON transactions
+FOR EACH ROW
+BEGIN
+INSERT INTO transaction_logs(
+    transaction_id,
+    action_type,
+    old_amount,
+    new_amount
+)
+VALUES(
+    NEW.transaction_id,
+    'UPDATE',
+    OLD.amount,
+    NEW.amount
+);
+END$$
+
+-- DELETE Trigger
+DROP TRIGGER IF EXISTS after_transaction_delete$$
+
+CREATE TRIGGER after_transaction_delete
+AFTER DELETE
+ON transactions
+FOR EACH ROW
+BEGIN
+INSERT INTO transaction_logs(
+    transaction_id,
+    action_type,
+    old_amount,
+    new_amount
+)
+VALUES(
+    OLD.transaction_id,
+    'DELETE',
+    OLD.amount,
+    NULL
+);
+END$$
+
+DELIMITER ;
 

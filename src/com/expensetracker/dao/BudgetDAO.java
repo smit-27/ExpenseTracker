@@ -30,7 +30,11 @@ public class BudgetDAO {
             return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            if (e instanceof SQLIntegrityConstraintViolationException) {
+                System.out.println("Budget already exists for this category and month.");
+            } else {
+                e.printStackTrace();
+            }
             return false;
         }
     }

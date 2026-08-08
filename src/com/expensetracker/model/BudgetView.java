@@ -42,6 +42,15 @@ public class BudgetView {
         return budgetMonth;
     }
 
+    public double getUsedPercentage() {
+
+        if (budgetAmount == 0) {
+            return 0;
+        }
+
+        return (spentAmount / budgetAmount) * 100;
+    }
+
     public String getStatus() {
         return remainingAmount >= 0
                 ? "Within Budget"
@@ -51,18 +60,23 @@ public class BudgetView {
     @Override
     public String toString() {
         return """
-                Category  : %s
-                Month     : %s
-                Budget    : £%.2f
-                Spent     : £%.2f
-                Remaining : £%.2f
-                Status    : %s
-                """.formatted(
+            ==================================
+            Category    : %s
+            Month       : %s
+
+            Budget      : £%.2f
+            Spent       : £%.2f
+            Remaining   : £%.2f
+            Used        : %.2f%%
+            Status      : %s
+            ==================================
+            """.formatted(
                 categoryName,
                 budgetMonth,
                 budgetAmount,
                 spentAmount,
                 remainingAmount,
+                getUsedPercentage(),
                 getStatus()
         );
     }
