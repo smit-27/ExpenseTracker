@@ -1,6 +1,7 @@
 package com.expensetracker.controller;
 
 import com.expensetracker.model.Budget;
+import com.expensetracker.model.BudgetReport;
 import com.expensetracker.service.BudgetService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,5 +57,14 @@ public class BudgetController {
         budgetService.deleteBudget(budgetId, userId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/report")
+    public ResponseEntity<List<BudgetReport>> getBudgetReport(
+            @RequestParam Integer userId) {
+
+        return ResponseEntity.ok(
+                budgetService.getBudgetReport(userId)
+        );
     }
 }

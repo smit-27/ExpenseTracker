@@ -1,11 +1,13 @@
 package com.expensetracker.service;
 
 import com.expensetracker.model.Budget;
+import com.expensetracker.model.BudgetReport;
 import com.expensetracker.model.Category;
 import com.expensetracker.repository.BudgetRepository;
 import com.expensetracker.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -82,5 +84,20 @@ public class BudgetService {
         Budget budget = getBudget(budgetId, userId);
 
         budgetRepository.delete(budget);
+    }
+
+    public List<BudgetReport> getBudgetReport(Integer userId) {
+
+        List<Object[]> rows =
+                budgetRepository.getBudgetReport(userId);
+
+        return rows.stream()
+                .map(row -> new BudgetReport(
+                        ((Number) row[0]).intValue(),
+                        (String) row[1],
+                        (BigDecimal) row[2],
+                        (BigDecimal) row[3]
+                ))
+                .toList();
     }
 }
