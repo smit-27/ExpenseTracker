@@ -1,5 +1,7 @@
 package com.expensetracker.service;
 
+import com.expensetracker.exception.DuplicateResourceException;
+import com.expensetracker.exception.ResourceNotFoundException;
 import com.expensetracker.model.Budget;
 import com.expensetracker.model.BudgetReport;
 import com.expensetracker.model.Category;
@@ -35,7 +37,9 @@ public class BudgetService {
                 .filter(c ->
                         c.getUserId().equals(budget.getUserId()))
                 .orElseThrow(() ->
-                        new RuntimeException("Category not found"));
+                        new ResourceNotFoundException(
+                                "Category not found"
+                        ));
 
         LocalDate month =
                 budget.getBudgetMonth()
@@ -47,7 +51,7 @@ public class BudgetService {
                         categoryId,
                         month)) {
 
-            throw new RuntimeException(
+            throw new DuplicateResourceException(
                     "Budget already exists for this category and month"
             );
         }
@@ -74,7 +78,9 @@ public class BudgetService {
                         userId
                 )
                 .orElseThrow(() ->
-                        new RuntimeException("Budget not found"));
+                        new ResourceNotFoundException(
+                                "Budget not found"
+                        ));
     }
 
     public void deleteBudget(

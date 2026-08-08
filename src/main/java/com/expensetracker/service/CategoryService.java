@@ -1,5 +1,7 @@
 package com.expensetracker.service;
 
+import com.expensetracker.exception.DuplicateResourceException;
+import com.expensetracker.exception.ResourceNotFoundException;
 import com.expensetracker.model.Category;
 import com.expensetracker.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,16 @@ public class CategoryService {
     }
 
     public Category addCategory(Category category) {
+
+        if (categoryRepository.existsByUserIdAndName(
+                category.getUserId(),
+                category.getName())) {
+
+            throw new DuplicateResourceException(
+                    "Category already exists"
+            );
+        }
+
         return categoryRepository.save(category);
     }
 
@@ -29,7 +41,7 @@ public class CategoryService {
                 .findById(categoryId)
                 .filter(category -> category.getUserId().equals(userId))
                 .orElseThrow(() ->
-                        new RuntimeException("Category not found"));
+                        new ResourceNotFoundException("Category not found"));
     }
 
     public void deleteCategory(Integer categoryId, Integer userId) {

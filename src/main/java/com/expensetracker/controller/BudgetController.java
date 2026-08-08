@@ -3,6 +3,7 @@ package com.expensetracker.controller;
 import com.expensetracker.model.Budget;
 import com.expensetracker.model.BudgetReport;
 import com.expensetracker.service.BudgetService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class BudgetController {
 
     @PostMapping
     public ResponseEntity<Budget> addBudget(
-            @RequestBody Budget budget) {
+            @Valid @RequestBody Budget budget) {
 
         Budget saved = budgetService.addBudget(budget);
 

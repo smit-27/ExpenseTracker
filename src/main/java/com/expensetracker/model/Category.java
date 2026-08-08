@@ -1,6 +1,9 @@
 package com.expensetracker.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "categories")
@@ -11,26 +14,19 @@ public class Category {
     @Column(name = "category_id")
     private Integer categoryId;
 
+    @NotNull(message = "User ID is required")
     @Column(name = "user_id", nullable = false)
     private Integer userId;
 
+    @NotBlank(message = "Category name is required")
+    @Size(max = 50, message = "Category name cannot exceed 50 characters")
     @Column(nullable = false, length = 50)
     private String name;
 
+    @NotNull(message = "Category type is required")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private CategoryType type;
-
-//    @OneToMany(mappedBy = "category")
-//    private List<Transaction> transactions;
-//
-//    public List<Transaction> getTransactions() {
-//        return transactions;
-//    }
-//
-//    public void setTransactions(List<Transaction> transactions) {
-//        this.transactions = transactions;
-//    }
 
     public Category() {
     }

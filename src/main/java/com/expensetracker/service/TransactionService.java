@@ -1,5 +1,6 @@
 package com.expensetracker.service;
 
+import com.expensetracker.exception.ResourceNotFoundException;
 import com.expensetracker.model.Category;
 import com.expensetracker.model.Transaction;
 import com.expensetracker.repository.CategoryRepository;
@@ -26,9 +27,12 @@ public class TransactionService {
 
         Category category = categoryRepository
                 .findById(transaction.getCategory().getCategoryId())
-                .filter(c -> c.getUserId().equals(transaction.getUserId()))
+                .filter(c ->
+                        c.getUserId().equals(transaction.getUserId()))
                 .orElseThrow(() ->
-                        new RuntimeException("Category not found"));
+                        new ResourceNotFoundException(
+                                "Category not found"
+                        ));
 
         transaction.setCategory(category);
 
@@ -50,7 +54,9 @@ public class TransactionService {
                 .filter(transaction ->
                         transaction.getUserId().equals(userId))
                 .orElseThrow(() ->
-                        new RuntimeException("Transaction not found"));
+                        new ResourceNotFoundException(
+                                "Transaction not found"
+                        ));
     }
 
     public Transaction updateTransaction(
@@ -70,7 +76,9 @@ public class TransactionService {
                 .filter(c ->
                         c.getUserId().equals(userId))
                 .orElseThrow(() ->
-                        new RuntimeException("Category not found"));
+                        new ResourceNotFoundException(
+                                "Category not found"
+                        ));
 
         existing.setCategory(category);
         existing.setAmount(updatedTransaction.getAmount());

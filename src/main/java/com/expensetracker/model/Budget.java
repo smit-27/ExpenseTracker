@@ -1,6 +1,8 @@
 package com.expensetracker.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -11,7 +13,11 @@ import java.time.LocalDate;
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "uq_user_category_month",
-                        columnNames = {"user_id", "category_id", "budget_month"}
+                        columnNames = {
+                                "user_id",
+                                "category_id",
+                                "budget_month"
+                        }
                 )
         }
 )
@@ -22,16 +28,26 @@ public class Budget {
     @Column(name = "budget_id")
     private Integer budgetId;
 
+    @NotNull(message = "User ID is required")
     @Column(name = "user_id", nullable = false)
     private Integer userId;
 
+    @NotNull(message = "Category is required")
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @Column(name = "budget_amount", nullable = false, precision = 10, scale = 2)
+    @NotNull(message = "Budget amount is required")
+    @Positive(message = "Budget amount must be greater than zero")
+    @Column(
+            name = "budget_amount",
+            nullable = false,
+            precision = 10,
+            scale = 2
+    )
     private BigDecimal budgetAmount;
 
+    @NotNull(message = "Budget month is required")
     @Column(name = "budget_month", nullable = false)
     private LocalDate budgetMonth;
 

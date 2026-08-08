@@ -13,4 +13,6 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
             Integer categoryId,
             Integer userId
     );
+
+    boolean existsByUserIdAndName(Integer userId, String name);
 }

@@ -2,6 +2,7 @@ package com.expensetracker.controller;
 
 import com.expensetracker.model.Category;
 import com.expensetracker.service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<Category> addCategory(
-            @RequestBody Category category) {
+            @Valid @RequestBody Category category) {
 
         Category savedCategory =
                 categoryService.addCategory(category);

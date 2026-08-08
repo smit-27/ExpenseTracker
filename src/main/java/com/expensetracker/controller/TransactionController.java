@@ -2,6 +2,7 @@ package com.expensetracker.controller;
 
 import com.expensetracker.model.Transaction;
 import com.expensetracker.service.TransactionService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +23,9 @@ public class TransactionController {
 
     @PostMapping
     public ResponseEntity<Transaction> addTransaction(
-            @RequestBody Transaction transaction) {
+            @Valid @RequestBody Transaction transaction) {
 
-        Transaction saved =
-                transactionService.addTransaction(transaction);
+        Transaction saved = transactionService.addTransaction(transaction);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
