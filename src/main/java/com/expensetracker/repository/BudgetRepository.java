@@ -24,6 +24,9 @@ public interface BudgetRepository extends JpaRepository<Budget, Integer> {
             LocalDate budgetMonth
     );
 
+    @Query("SELECT DISTINCT b.userId FROM Budget b")
+    List<Integer> findAllUserIds();
+
     @Query(value = """
         SELECT
             b.budget_id AS budgetId,
