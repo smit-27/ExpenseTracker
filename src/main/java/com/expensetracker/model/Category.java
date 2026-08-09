@@ -14,9 +14,9 @@ public class Category {
     @Column(name = "category_id")
     private Integer categoryId;
 
-    @NotNull(message = "User ID is required")
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @NotBlank(message = "Category name is required")
     @Size(max = 50, message = "Category name cannot exceed 50 characters")
@@ -31,10 +31,10 @@ public class Category {
     public Category() {
     }
 
-    public Category(Integer categoryId, Integer userId,
+    public Category(Integer categoryId, User user,
                     String name, CategoryType type) {
         this.categoryId = categoryId;
-        this.userId = userId;
+        this.user = user;
         this.name = name;
         this.type = type;
     }
@@ -47,12 +47,12 @@ public class Category {
         this.categoryId = categoryId;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getName() {

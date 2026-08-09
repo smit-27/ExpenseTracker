@@ -7,12 +7,15 @@ import java.util.List;
 
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
-    List<Category> findByUserId(Integer userId);
+    List<Category> findByUserUserId(Integer userId);
 
-    boolean existsByCategoryIdAndUserId(
+    boolean existsByCategoryIdAndUserUserId(
             Integer categoryId,
             Integer userId
     );
 
-    boolean existsByUserIdAndName(Integer userId, String name);
+    boolean existsByUserUserIdAndName(
+            Integer userId,
+            String name
+    );
 }

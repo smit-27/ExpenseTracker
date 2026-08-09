@@ -1,9 +1,9 @@
 package com.expensetracker.service;
 
-import com.expensetracker.exception.DuplicateResourceException;
-import com.expensetracker.exception.ResourceNotFoundException;
 import com.expensetracker.model.Category;
+import com.expensetracker.model.User;
 import com.expensetracker.repository.CategoryRepository;
+import com.expensetracker.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,36 +12,42 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(
+            CategoryRepository categoryRepository,
+            UserRepository userRepository) {
+
         this.categoryRepository = categoryRepository;
+        this.userRepository = userRepository;
     }
 
     public Category addCategory(Category category) {
 
-        if (categoryRepository.existsByUserIdAndName(
-                category.getUserId(),
-                category.getName())) {
+        User user = userRepository
+                .findById(category.getUser().getUserId())
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
 
-            throw new DuplicateResourceException(
-                    "Category already exists"
-            );
-        }
+        category.setUser(user);
 
         return categoryRepository.save(category);
     }
 
     public List<Category> getAllCategories(Integer userId) {
-        return categoryRepository.findByUserId(userId);
+        return categoryRepository.findByUserUserId(userId);
     }
 
     public Category getCategory(Integer categoryId, Integer userId) {
 
         return categoryRepository
                 .findById(categoryId)
-                .filter(category -> category.getUserId().equals(userId))
+                .filter(category ->
+                        category.getUser()
+                                .getUserId()
+                                .equals(userId))
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Category not found"));
+                        new RuntimeException("Category not found"));
     }
 
     public void deleteCategory(Integer categoryId, Integer userId) {

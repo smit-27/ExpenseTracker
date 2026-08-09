@@ -28,9 +28,9 @@ public class Budget {
     @Column(name = "budget_id")
     private Integer budgetId;
 
-    @NotNull(message = "User ID is required")
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @NotNull(message = "Category is required")
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -62,12 +62,12 @@ public class Budget {
         this.budgetId = budgetId;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Category getCategory() {

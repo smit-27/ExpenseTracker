@@ -9,22 +9,25 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface BudgetRepository extends JpaRepository<Budget, Integer> {
+public interface BudgetRepository
+        extends JpaRepository<Budget, Integer> {
 
-    List<Budget> findByUserIdOrderByBudgetMonthDesc(Integer userId);
+    List<Budget> findByUserUserIdOrderByBudgetMonthDesc(
+            Integer userId
+    );
 
-    Optional<Budget> findByBudgetIdAndUserId(
+    Optional<Budget> findByBudgetIdAndUserUserId(
             Integer budgetId,
             Integer userId
     );
 
-    boolean existsByUserIdAndCategoryCategoryIdAndBudgetMonth(
+    boolean existsByUserUserIdAndCategoryCategoryIdAndBudgetMonth(
             Integer userId,
             Integer categoryId,
             LocalDate budgetMonth
     );
 
-    @Query("SELECT DISTINCT b.userId FROM Budget b")
+    @Query("SELECT DISTINCT b.user.userId FROM Budget b")
     List<Integer> findAllUserIds();
 
     @Query(value = """
@@ -45,8 +48,10 @@ public interface BudgetRepository extends JpaRepository<Budget, Integer> {
         LEFT JOIN transactions t
             ON t.category_id = c.category_id
             AND t.user_id = b.user_id
-            AND YEAR(t.transaction_date) = YEAR(b.budget_month)
-            AND MONTH(t.transaction_date) = MONTH(b.budget_month)
+            AND YEAR(t.transaction_date) =
+                YEAR(b.budget_month)
+            AND MONTH(t.transaction_date) =
+                MONTH(b.budget_month)
         WHERE b.user_id = :userId
         GROUP BY
             b.budget_id,

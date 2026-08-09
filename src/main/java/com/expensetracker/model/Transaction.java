@@ -17,9 +17,9 @@ public class Transaction {
     @Column(name = "transaction_id")
     private Integer transactionId;
 
-    @NotNull(message = "User ID is required")
-    @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @NotNull(message = "Category is required")
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -50,12 +50,12 @@ public class Transaction {
         this.transactionId = transactionId;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Category getCategory() {

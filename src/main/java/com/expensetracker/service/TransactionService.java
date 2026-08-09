@@ -3,8 +3,10 @@ package com.expensetracker.service;
 import com.expensetracker.exception.ResourceNotFoundException;
 import com.expensetracker.model.Category;
 import com.expensetracker.model.Transaction;
+import com.expensetracker.model.User;
 import com.expensetracker.repository.CategoryRepository;
 import com.expensetracker.repository.TransactionRepository;
+import com.expensetracker.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,26 +16,35 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
     public TransactionService(
             TransactionRepository transactionRepository,
-            CategoryRepository categoryRepository) {
+            CategoryRepository categoryRepository,
+            UserRepository userRepository) {
 
         this.transactionRepository = transactionRepository;
         this.categoryRepository = categoryRepository;
+        this.userRepository = userRepository;
     }
 
     public Transaction addTransaction(Transaction transaction) {
 
+        Integer userId = transaction.getUser().getUserId();
+
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
+
         Category category = categoryRepository
                 .findById(transaction.getCategory().getCategoryId())
                 .filter(c ->
-                        c.getUserId().equals(transaction.getUserId()))
+                        c.getUser().getUserId().equals(userId))
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Category not found"
-                        ));
+                        new RuntimeException("Category not found"));
 
+        transaction.setUser(user);
         transaction.setCategory(category);
 
         return transactionRepository.save(transaction);
@@ -42,7 +53,7 @@ public class TransactionService {
     public List<Transaction> getAllTransactions(Integer userId) {
 
         return transactionRepository
-                .findByUserIdOrderByTransactionDateDesc(userId);
+                .findByUserUserIdOrderByTransactionDateDesc(userId);
     }
 
     public Transaction getTransaction(
@@ -52,7 +63,7 @@ public class TransactionService {
         return transactionRepository
                 .findById(transactionId)
                 .filter(transaction ->
-                        transaction.getUserId().equals(userId))
+                        transaction.getUser().getUserId().equals(userId))
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Transaction not found"
@@ -74,7 +85,7 @@ public class TransactionService {
                                 .getCategoryId()
                 )
                 .filter(c ->
-                        c.getUserId().equals(userId))
+                        c.getUser().getUserId().equals(userId))
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Category not found"

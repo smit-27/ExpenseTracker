@@ -5,8 +5,10 @@ import com.expensetracker.exception.ResourceNotFoundException;
 import com.expensetracker.model.Budget;
 import com.expensetracker.model.BudgetReport;
 import com.expensetracker.model.Category;
+import com.expensetracker.model.User;
 import com.expensetracker.repository.BudgetRepository;
 import com.expensetracker.repository.CategoryRepository;
+import com.expensetracker.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,24 +20,37 @@ public class BudgetService {
 
     private final BudgetRepository budgetRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
     public BudgetService(
             BudgetRepository budgetRepository,
-            CategoryRepository categoryRepository) {
+            CategoryRepository categoryRepository,
+            UserRepository userRepository) {
 
         this.budgetRepository = budgetRepository;
         this.categoryRepository = categoryRepository;
+        this.userRepository = userRepository;
     }
 
     public Budget addBudget(Budget budget) {
 
+        Integer userId =
+                budget.getUser().getUserId();
+
         Integer categoryId =
                 budget.getCategory().getCategoryId();
+
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "User not found"
+                        ));
 
         Category category = categoryRepository
                 .findById(categoryId)
                 .filter(c ->
-                        c.getUserId().equals(budget.getUserId()))
+                        c.getUser().getUserId().equals(userId))
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Category not found"
@@ -46,8 +61,8 @@ public class BudgetService {
                         .withDayOfMonth(1);
 
         if (budgetRepository
-                .existsByUserIdAndCategoryCategoryIdAndBudgetMonth(
-                        budget.getUserId(),
+                .existsByUserUserIdAndCategoryCategoryIdAndBudgetMonth(
+                        userId,
                         categoryId,
                         month)) {
 
@@ -56,6 +71,7 @@ public class BudgetService {
             );
         }
 
+        budget.setUser(user);
         budget.setCategory(category);
         budget.setBudgetMonth(month);
 
@@ -65,7 +81,7 @@ public class BudgetService {
     public List<Budget> getAllBudgets(Integer userId) {
 
         return budgetRepository
-                .findByUserIdOrderByBudgetMonthDesc(userId);
+                .findByUserUserIdOrderByBudgetMonthDesc(userId);
     }
 
     public Budget getBudget(
@@ -73,7 +89,7 @@ public class BudgetService {
             Integer userId) {
 
         return budgetRepository
-                .findByBudgetIdAndUserId(
+                .findByBudgetIdAndUserUserId(
                         budgetId,
                         userId
                 )

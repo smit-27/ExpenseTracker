@@ -3,6 +3,7 @@ package com.expensetracker.service;
 import com.expensetracker.model.Budget;
 import com.expensetracker.model.BudgetReminder;
 import com.expensetracker.model.BudgetReminderLog;
+import com.expensetracker.model.CategoryType;
 import com.expensetracker.repository.BudgetReminderLogRepository;
 import com.expensetracker.repository.BudgetRepository;
 import com.expensetracker.repository.TransactionRepository;
@@ -36,7 +37,7 @@ public class BudgetReminderService {
 
         List<Budget> budgets =
                 budgetRepository
-                        .findByUserIdOrderByBudgetMonthDesc(userId);
+                        .findByUserUserIdOrderByBudgetMonthDesc(userId);
 
         List<BudgetReminder> reminders = new ArrayList<>();
 
@@ -63,6 +64,7 @@ public class BudgetReminderService {
                                     userId,
                                     budget.getCategory()
                                             .getCategoryId(),
+                                    CategoryType.EXPENSE,
                                     startDate,
                                     endDate
                             );
