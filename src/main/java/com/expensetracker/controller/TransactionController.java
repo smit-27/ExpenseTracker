@@ -2,9 +2,11 @@ package com.expensetracker.controller;
 
 import com.expensetracker.model.Transaction;
 import com.expensetracker.service.TransactionService;
-import jakarta.validation.Valid;
+import com.expensetracker.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,18 +16,27 @@ import java.util.List;
 public class TransactionController {
 
     private final TransactionService transactionService;
+    private final UserService userService;
 
     public TransactionController(
-            TransactionService transactionService) {
+            TransactionService transactionService,
+            UserService userService) {
 
         this.transactionService = transactionService;
+        this.userService = userService;
     }
 
     @PostMapping
     public ResponseEntity<Transaction> addTransaction(
-            @Valid @RequestBody Transaction transaction) {
+            @RequestBody Transaction transaction,
+            @AuthenticationPrincipal Jwt jwt) {
 
-        Transaction saved = transactionService.addTransaction(transaction);
+        Long userId = jwt.getClaim("userId");
+
+        transaction.setUser(userService.getUser(userId.intValue()));
+
+        Transaction saved =
+                transactionService.addTransaction(transaction);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -34,22 +45,26 @@ public class TransactionController {
 
     @GetMapping
     public ResponseEntity<List<Transaction>> getTransactions(
-            @RequestParam Integer userId) {
+            @AuthenticationPrincipal Jwt jwt) {
+
+        Long userId = jwt.getClaim("userId");
 
         return ResponseEntity.ok(
-                transactionService.getAllTransactions(userId)
+                transactionService.getAllTransactions(userId.intValue())
         );
     }
 
     @GetMapping("/{transactionId}")
     public ResponseEntity<Transaction> getTransaction(
             @PathVariable Integer transactionId,
-            @RequestParam Integer userId) {
+            @AuthenticationPrincipal Jwt jwt) {
+
+        Long userId = jwt.getClaim("userId");
 
         return ResponseEntity.ok(
                 transactionService.getTransaction(
                         transactionId,
-                        userId
+                        userId.intValue()
                 )
         );
     }
@@ -57,14 +72,16 @@ public class TransactionController {
     @PutMapping("/{transactionId}")
     public ResponseEntity<Transaction> updateTransaction(
             @PathVariable Integer transactionId,
-            @RequestParam Integer userId,
-            @RequestBody Transaction transaction) {
+            @RequestBody Transaction transaction,
+            @AuthenticationPrincipal Jwt jwt) {
+
+        Long userId = jwt.getClaim("userId");
 
         return ResponseEntity.ok(
                 transactionService.updateTransaction(
                         transactionId,
                         transaction,
-                        userId
+                        userId.intValue()
                 )
         );
     }
@@ -72,11 +89,13 @@ public class TransactionController {
     @DeleteMapping("/{transactionId}")
     public ResponseEntity<Void> deleteTransaction(
             @PathVariable Integer transactionId,
-            @RequestParam Integer userId) {
+            @AuthenticationPrincipal Jwt jwt) {
+
+        Long userId = jwt.getClaim("userId");
 
         transactionService.deleteTransaction(
                 transactionId,
-                userId
+                userId.intValue()
         );
 
         return ResponseEntity.noContent().build();

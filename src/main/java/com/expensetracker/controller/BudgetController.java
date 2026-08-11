@@ -6,6 +6,8 @@ import com.expensetracker.service.BudgetService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,9 +24,16 @@ public class BudgetController {
 
     @PostMapping
     public ResponseEntity<Budget> addBudget(
-            @Valid @RequestBody Budget budget) {
+            @Valid @RequestBody Budget budget,
+            @AuthenticationPrincipal Jwt jwt) {
 
-        Budget saved = budgetService.addBudget(budget);
+        Long userId = jwt.getClaim("userId");
+
+        Budget saved =
+                budgetService.addBudget(
+                        budget,
+                        userId.intValue()
+                );
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -33,39 +42,57 @@ public class BudgetController {
 
     @GetMapping
     public ResponseEntity<List<Budget>> getBudgets(
-            @RequestParam Integer userId) {
+            @AuthenticationPrincipal Jwt jwt) {
+
+        Long userId = jwt.getClaim("userId");
 
         return ResponseEntity.ok(
-                budgetService.getAllBudgets(userId)
+                budgetService.getAllBudgets(
+                        userId.intValue()
+                )
         );
     }
 
     @GetMapping("/{budgetId}")
     public ResponseEntity<Budget> getBudget(
             @PathVariable Integer budgetId,
-            @RequestParam Integer userId) {
+            @AuthenticationPrincipal Jwt jwt) {
+
+        Long userId = jwt.getClaim("userId");
 
         return ResponseEntity.ok(
-                budgetService.getBudget(budgetId, userId)
+                budgetService.getBudget(
+                        budgetId,
+                        userId.intValue()
+                )
         );
     }
 
     @DeleteMapping("/{budgetId}")
     public ResponseEntity<Void> deleteBudget(
             @PathVariable Integer budgetId,
-            @RequestParam Integer userId) {
+            @AuthenticationPrincipal Jwt jwt) {
 
-        budgetService.deleteBudget(budgetId, userId);
+        Long userId = jwt.getClaim("userId");
+
+        budgetService.deleteBudget(
+                budgetId,
+                userId.intValue()
+        );
 
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/report")
     public ResponseEntity<List<BudgetReport>> getBudgetReport(
-            @RequestParam Integer userId) {
+            @AuthenticationPrincipal Jwt jwt) {
+
+        Long userId = jwt.getClaim("userId");
 
         return ResponseEntity.ok(
-                budgetService.getBudgetReport(userId)
+                budgetService.getBudgetReport(
+                        userId.intValue()
+                )
         );
     }
 }

@@ -1,6 +1,7 @@
 package com.expensetracker.controller;
 
 import com.expensetracker.dto.LoginRequest;
+import com.expensetracker.dto.LoginResponse;
 import com.expensetracker.dto.RegisterRequest;
 import com.expensetracker.dto.UserResponse;
 import com.expensetracker.model.User;
@@ -40,15 +41,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponse> login(
+    public ResponseEntity<LoginResponse> login(
             @Valid @RequestBody LoginRequest request) {
 
-        User user = userService.loginUser(request);
-
-        UserResponse response = new UserResponse(
-                user.getUserId(),
-                user.getUsername()
-        );
+        LoginResponse response =
+                userService.loginUser(request);
 
         return ResponseEntity.ok(response);
     }

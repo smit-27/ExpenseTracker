@@ -35,14 +35,20 @@ public class TransactionService {
         User user = userRepository
                 .findById(userId)
                 .orElseThrow(() ->
-                        new RuntimeException("User not found"));
+                        new ResourceNotFoundException(
+                                "User not found"
+                        ));
 
         Category category = categoryRepository
-                .findById(transaction.getCategory().getCategoryId())
+                .findById(
+                        transaction.getCategory().getCategoryId()
+                )
                 .filter(c ->
                         c.getUser().getUserId().equals(userId))
                 .orElseThrow(() ->
-                        new RuntimeException("Category not found"));
+                        new ResourceNotFoundException(
+                                "Category not found"
+                        ));
 
         transaction.setUser(user);
         transaction.setCategory(category);

@@ -32,10 +32,9 @@ public class BudgetService {
         this.userRepository = userRepository;
     }
 
-    public Budget addBudget(Budget budget) {
-
-        Integer userId =
-                budget.getUser().getUserId();
+    public Budget addBudget(
+            Budget budget,
+            Integer userId) {
 
         Integer categoryId =
                 budget.getCategory().getCategoryId();
@@ -50,7 +49,9 @@ public class BudgetService {
         Category category = categoryRepository
                 .findById(categoryId)
                 .filter(c ->
-                        c.getUser().getUserId().equals(userId))
+                        c.getUser()
+                                .getUserId()
+                                .equals(userId))
                 .orElseThrow(() ->
                         new ResourceNotFoundException(
                                 "Category not found"

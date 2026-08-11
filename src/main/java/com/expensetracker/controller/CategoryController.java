@@ -5,6 +5,8 @@ import com.expensetracker.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,10 +23,16 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<Category> addCategory(
-            @Valid @RequestBody Category category) {
+            @Valid @RequestBody Category category,
+            @AuthenticationPrincipal Jwt jwt) {
+
+        Long userId = jwt.getClaim("userId");
 
         Category savedCategory =
-                categoryService.addCategory(category);
+                categoryService.addCategory(
+                        category,
+                        userId.intValue()
+                );
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -33,29 +41,43 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<Category>> getCategories(
-            @RequestParam Integer userId) {
+            @AuthenticationPrincipal Jwt jwt) {
+
+        Long userId = jwt.getClaim("userId");
 
         return ResponseEntity.ok(
-                categoryService.getAllCategories(userId)
+                categoryService.getAllCategories(
+                        userId.intValue()
+                )
         );
     }
 
     @GetMapping("/{categoryId}")
     public ResponseEntity<Category> getCategory(
             @PathVariable Integer categoryId,
-            @RequestParam Integer userId) {
+            @AuthenticationPrincipal Jwt jwt) {
+
+        Long userId = jwt.getClaim("userId");
 
         return ResponseEntity.ok(
-                categoryService.getCategory(categoryId, userId)
+                categoryService.getCategory(
+                        categoryId,
+                        userId.intValue()
+                )
         );
     }
 
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<Void> deleteCategory(
             @PathVariable Integer categoryId,
-            @RequestParam Integer userId) {
+            @AuthenticationPrincipal Jwt jwt) {
 
-        categoryService.deleteCategory(categoryId, userId);
+        Long userId = jwt.getClaim("userId");
+
+        categoryService.deleteCategory(
+                categoryId,
+                userId.intValue()
+        );
 
         return ResponseEntity.noContent().build();
     }

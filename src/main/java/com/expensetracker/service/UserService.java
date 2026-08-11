@@ -1,11 +1,13 @@
 package com.expensetracker.service;
 
 import com.expensetracker.dto.LoginRequest;
+import com.expensetracker.dto.LoginResponse;
 import com.expensetracker.dto.RegisterRequest;
 import com.expensetracker.exception.DuplicateResourceException;
 import com.expensetracker.exception.ResourceNotFoundException;
 import com.expensetracker.model.User;
 import com.expensetracker.repository.UserRepository;
+import com.expensetracker.security.JwtService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +16,16 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     public UserService(
             UserRepository userRepository,
-            BCryptPasswordEncoder passwordEncoder) {
+            BCryptPasswordEncoder passwordEncoder,
+            JwtService jwtService) {
 
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     public User registerUser(RegisterRequest request) {
@@ -42,7 +47,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User loginUser(LoginRequest request) {
+    public LoginResponse loginUser(LoginRequest request) {
 
         User user = userRepository
                 .findByUsername(request.getUsername())
@@ -60,7 +65,16 @@ public class UserService {
             );
         }
 
-        return user;
+        String token = jwtService.generateToken(
+                user.getUserId(),
+                user.getUsername()
+        );
+
+        return new LoginResponse(
+                user.getUserId(),
+                user.getUsername(),
+                token
+        );
     }
 
     public User getUser(Integer userId) {

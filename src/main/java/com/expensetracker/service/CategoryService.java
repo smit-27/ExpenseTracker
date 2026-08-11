@@ -1,5 +1,7 @@
 package com.expensetracker.service;
 
+import com.expensetracker.exception.DuplicateResourceException;
+import com.expensetracker.exception.ResourceNotFoundException;
 import com.expensetracker.model.Category;
 import com.expensetracker.model.User;
 import com.expensetracker.repository.CategoryRepository;
@@ -22,12 +24,26 @@ public class CategoryService {
         this.userRepository = userRepository;
     }
 
-    public Category addCategory(Category category) {
+    public Category addCategory(
+            Category category,
+            Integer userId) {
 
         User user = userRepository
-                .findById(category.getUser().getUserId())
+                .findById(userId)
                 .orElseThrow(() ->
-                        new RuntimeException("User not found"));
+                        new ResourceNotFoundException(
+                                "User not found"
+                        ));
+
+        if (categoryRepository.existsByUserUserIdAndName(
+                userId,
+                category.getName()
+        )) {
+
+            throw new DuplicateResourceException(
+                    "Category already exists"
+            );
+        }
 
         category.setUser(user);
 
@@ -35,10 +51,14 @@ public class CategoryService {
     }
 
     public List<Category> getAllCategories(Integer userId) {
-        return categoryRepository.findByUserUserId(userId);
+
+        return categoryRepository
+                .findByUserUserId(userId);
     }
 
-    public Category getCategory(Integer categoryId, Integer userId) {
+    public Category getCategory(
+            Integer categoryId,
+            Integer userId) {
 
         return categoryRepository
                 .findById(categoryId)
@@ -47,12 +67,17 @@ public class CategoryService {
                                 .getUserId()
                                 .equals(userId))
                 .orElseThrow(() ->
-                        new RuntimeException("Category not found"));
+                        new ResourceNotFoundException(
+                                "Category not found"
+                        ));
     }
 
-    public void deleteCategory(Integer categoryId, Integer userId) {
+    public void deleteCategory(
+            Integer categoryId,
+            Integer userId) {
 
-        Category category = getCategory(categoryId, userId);
+        Category category =
+                getCategory(categoryId, userId);
 
         categoryRepository.delete(category);
     }
