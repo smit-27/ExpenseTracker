@@ -33,11 +33,13 @@ public class BudgetService {
     }
 
     public Budget addBudget(
-            Budget budget,
-            Integer userId) {
+            Budget budget) {
 
         Integer categoryId =
                 budget.getCategory().getCategoryId();
+
+        Integer userId =
+                budget.getUser().getUserId();
 
         User user = userRepository
                 .findById(userId)
@@ -122,5 +124,15 @@ public class BudgetService {
                         (BigDecimal) row[3]
                 ))
                 .toList();
+    }
+
+    public User getUser(Integer userId) {
+
+        return userRepository
+                .findById(userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "User not found"
+                        ));
     }
 }
