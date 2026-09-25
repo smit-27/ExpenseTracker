@@ -9,8 +9,12 @@ async function apiRequest(endpoint, options = {}) {
         ...options.headers
     };
 
-    if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
+    if (
+       token &&
+       endpoint !== "/users/login" &&
+       endpoint !== "/users/register"
+    ) {
+       headers["Authorization"] = `Bearer ${token}`;
     }
 
     const response = await fetch(
@@ -27,9 +31,8 @@ async function apiRequest(endpoint, options = {}) {
 
         try {
             const error = await response.json();
-            message = error.message || message;
+            message = error.message || error.error || message;
         } catch (e) {
-            // Response may not contain JSON
         }
 
         throw new Error(message);

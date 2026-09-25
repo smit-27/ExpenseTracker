@@ -11,6 +11,8 @@ import com.expensetracker.security.JwtService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class UserService {
 
@@ -43,6 +45,8 @@ public class UserService {
         user.setPasswordHash(
                 passwordEncoder.encode(request.getPassword())
         );
+
+        user.setCreatedAt(LocalDateTime.now());
 
         return userRepository.save(user);
     }
