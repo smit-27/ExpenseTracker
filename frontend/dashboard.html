@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - Expense Tracker</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            Expense Tracker
+        </div>
+
+        <nav>
+            <button class="nav-item active">
+                Dashboard
+            </button>
+
+            <button class="nav-item"
+                    onclick="window.location.href='transactions.html'">
+                Transactions
+            </button>
+
+            <button class="nav-item"
+                    onclick="window.location.href='categories.html'">
+                Categories
+            </button>
+
+            <button class="nav-item"
+                    onclick="window.location.href='budgets.html'">
+                Budgets
+            </button>
+        </nav>
+
+        <button class="logout-button" id="logout-button">
+            Logout
+        </button>
+
+    </aside>
+
+
+    <!-- Main content -->
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div>
+                <h1>Dashboard</h1>
+                <p id="welcome-message">
+                    Welcome back!
+                </p>
+            </div>
+
+        </header>
+
+
+        <!-- Summary cards -->
+        <section class="summary-grid">
+
+            <div class="summary-card income-card">
+                <p>Total Income</p>
+                <h2 id="total-income">₹0.00</h2>
+            </div>
+
+            <div class="summary-card expense-card">
+                <p>Total Expenses</p>
+                <h2 id="total-expense">₹0.00</h2>
+            </div>
+
+            <div class="summary-card balance-card">
+                <p>Balance</p>
+                <h2 id="balance">₹0.00</h2>
+            </div>
+
+        </section>
+
+
+        <!-- Dashboard content -->
+        <section class="dashboard-grid">
+
+            <!-- Recent transactions -->
+            <div class="dashboard-card">
+
+                <div class="card-header">
+
+                    <h2>Recent Transactions</h2>
+
+                    <button
+                            class="small-button"
+                            onclick="window.location.href='transactions.html'">
+                        View All
+                    </button>
+
+                </div>
+
+                <div id="recent-transactions">
+                    <p class="empty-message">
+                        Loading transactions...
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- Budget overview -->
+            <div class="dashboard-card">
+
+                <div class="card-header">
+
+                    <h2>Budget Overview</h2>
+
+                    <button
+                            class="small-button"
+                            onclick="window.location.href='budgets.html'">
+                        View All
+                    </button>
+
+                </div>
+
+                <div id="budget-overview">
+                    <p class="empty-message">
+                        Loading budgets...
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/dashboard.js"></script>
+
+</body>
+
+</html>

@@ -29,11 +29,14 @@ public class BudgetController {
 
         Long userId = jwt.getClaim("userId");
 
-        Budget saved =
-                budgetService.addBudget(
-                        budget,
+        budget.setUser(
+                budgetService.getUser(
                         userId.intValue()
-                );
+                )
+        );
+
+        Budget saved =
+                budgetService.addBudget(budget);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -80,7 +83,9 @@ public class BudgetController {
                 userId.intValue()
         );
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 
     @GetMapping("/report")

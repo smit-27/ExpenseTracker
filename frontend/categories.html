@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Categories - Expense Tracker</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            Expense Tracker
+        </div>
+
+
+        <nav>
+
+            <button
+                    class="nav-item"
+                    onclick="window.location.href='dashboard.html'">
+                Dashboard
+            </button>
+
+
+            <button
+                    class="nav-item"
+                    onclick="window.location.href='transactions.html'">
+                Transactions
+            </button>
+
+
+            <button class="nav-item active">
+                Categories
+            </button>
+
+
+            <button
+                    class="nav-item"
+                    onclick="window.location.href='budgets.html'">
+                Budgets
+            </button>
+
+        </nav>
+
+
+        <button
+                class="logout-button"
+                id="logout-button">
+            Logout
+        </button>
+
+    </aside>
+
+
+    <main class="main-content">
+
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>Categories</h1>
+
+                <p>
+                    Manage your income and expense categories
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <div id="category-message"></div>
+
+
+        <!-- Add category -->
+
+        <section class="dashboard-card form-card">
+
+            <h2>Add Category</h2>
+
+
+            <form id="category-form">
+
+
+                <div class="form-row">
+
+
+                    <div class="form-group">
+
+                        <label for="category-name">
+                            Category Name
+                        </label>
+
+                        <input
+                                type="text"
+                                id="category-name"
+                                maxlength="50"
+                                placeholder="e.g. Groceries"
+                                required>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="category-type">
+                            Type
+                        </label>
+
+                        <select
+                                id="category-type"
+                                required>
+
+                            <option value="">
+                                Select type
+                            </option>
+
+                            <option value="EXPENSE">
+                                Expense
+                            </option>
+
+                            <option value="INCOME">
+                                Income
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                </div>
+
+
+                <button type="submit">
+                    Add Category
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- Category list -->
+
+        <section class="dashboard-card table-card">
+
+            <div class="card-header">
+
+                <h2>Your Categories</h2>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Name</th>
+
+                        <th>Type</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                    </thead>
+
+
+                    <tbody id="categories-table-body">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+<script src="js/api.js"></script>
+
+<script src="js/categories.js"></script>
+
+</body>
+
+</html>

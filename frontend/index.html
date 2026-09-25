@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Expense Tracker</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div id="app">
+
+    <div class="auth-container">
+
+        <div class="auth-card">
+
+            <h1>Expense Tracker</h1>
+            <p class="subtitle">Manage your finances easily</p>
+
+            <div id="message"></div>
+
+            <!-- Login -->
+            <div id="login-section">
+
+                <h2>Login</h2>
+
+                <form id="login-form">
+
+                    <input
+                            type="text"
+                            id="login-username"
+                            placeholder="Username"
+                            required
+                    >
+
+                    <input
+                            type="password"
+                            id="login-password"
+                            placeholder="Password"
+                            required
+                    >
+
+                    <button type="submit">
+                        Login
+                    </button>
+
+                </form>
+
+                <p>
+                    Don't have an account?
+                    <button
+                            type="button"
+                            class="link-button"
+                            id="show-register">
+                        Register
+                    </button>
+                </p>
+
+            </div>
+
+
+            <!-- Register -->
+            <div id="register-section" class="hidden">
+
+                <h2>Create Account</h2>
+
+                <form id="register-form">
+
+                    <input
+                            type="text"
+                            id="register-username"
+                            placeholder="Username"
+                            required
+                    >
+
+                    <input
+                            type="password"
+                            id="register-password"
+                            placeholder="Password"
+                            required
+                    >
+
+                    <button type="submit">
+                        Register
+                    </button>
+
+                </form>
+
+                <p>
+                    Already have an account?
+                    <button
+                            type="button"
+                            class="link-button"
+                            id="show-login">
+                        Login
+                    </button>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
